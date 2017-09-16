@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>LimBand | Home</title>
+	<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+	<Header>
+		<div class= "container">
+			<div id= "branding">
+				<h1>Lim<span class="highlight">Band</span></h1>
+			</div>
+			<nav>
+				<ul>
+					<li class= "current"><a href="index.html">Home</a></li>
+				</ul>
+			</nav>
+		</div>
+	</Header>
+
+	<section id="showcase">
+		<div class="container">
+			<h1>Meet the LimBand!</h1>
+		</div> 
+	</section>
+
+	<section id="about">
+		<div class="container">
+			<h1>Meet the team!</h1>
+		</div>		
+	</section>
+
+	<section id="IO">
+		<div class ="container">
+			<form id="form1">
+				Enter Target Distance: <input name="miles" type="text" placeholder="Miles"> <br>
+				Enter Target Pace: <input name="minutes" type="text" placeholder="Minutes"> <input name="seconds" type="text" placeholder="Seconds">
+				<button type="button" class="button" onclick="load()">Submit</button>
+			</form>
+			<div id="output"></div>
+		</div>
+	</section>
+	<script>
+		function load() {
+			var x = document.getElementById("form1");
+			var miles = x.elements["miles"].value;
+			var mins = x.elements["minutes"].value;
+			var secs = x.elements["seconds"].value;
+			document.getElementById("output").innerHTML = "You are running " + miles + " miles at " + mins + " minutes and " + secs + " seconds per mile.";
+			// var xhr = new XMLHttpRequest();
+			// xhr.open("GET", "./hey.txt", true);
+			// xhr.onload = function(){
+			// 	if (this.status == 200){
+			// 	}
+			// }
+			// xhr.send();
+
+		}
+
+	</script>
+
+
+	<footer>
+		<p>LimBand, Copyright &copy; 2017</p>
+	</footer>
+
+</body>
+</html>
