@@ -6,104 +6,119 @@
 	<title>LimBand | Home</title>
 	<style>
 		body{
-	font:15px/1.5 Helvetica, Arial, sans-serif;
-	padding: 0;
-	margin: 0;
-	background-color: gray;
-}
+			font:15px/1.5 Helvetica, Arial, sans-serif;
+			padding: 0;
+			margin: 0;
+			background-color: gray;
+		}
 
-/* Global */
-.container{
-	width: 80%;
-	margin: auto;
-	overflow: hidden;
-}
+		/* Global */
+		.container{
+			width: 80%;
+			margin: auto;
+			overflow: hidden;
+			height: 100%;
+		}
 
-ul{
-	margin: 0;
-	padding: 0;
-}
+		ul{
+			margin: 0;
+			padding: 0;
+		}
 
-/* Header **/
-header{
-	background: #35424a;
-	color: #ffffff;
-	padding-top: 30px;
-	min-height: 70px;
-	border-bottom: pink 3px solid;
-}
+		/* Header **/
+		header{
+			background: #35424a;
+			color: #ffffff;
+			padding-top: 30px;
+			min-height: 70px;
+			border-bottom: pink 3px solid;
+		}
 
-header a{
-	color: #ffffff;
-	text-decoration: none;
-	text-transform: uppercase;
-	font-size: 16px;
-}
+		header a{
+			color: #ffffff;
+			text-decoration: none;
+			text-transform: uppercase;
+			font-size: 16px;
+		}
 
-header li{
-	float:left;
-	display:inline;
-	padding: 0 20px 0 20px;
-}
+		header li{
+			float:left;
+			display:inline;
+			padding: 0 20px 0 20px;
+		}
 
-header #branding{
-	float:left;
-}
+		header #branding{
+			float:left;
+		}
 
-header #branding h1{
-	margin:0;
-}
+		header #branding h1{
+			margin:0;
+		}
 
-header nav{
-	float:right;
-	margin-top: 10px;
-}
+		header nav{
+			float:right;
+			margin-top: 10px;
+		}
 
-header .highlight, header .current a{
-	color: #50EBEC;
-	font-weight: bold;
-}
+		header .highlight, header .current a{
+			color: #50EBEC;
+			font-weight: bold;
+		}
 
-header a:hover{
-	color: #46C7C7;
-	font-weight: bold;
-}
+		header a:hover{
+			color: #46C7C7;
+			font-weight: bold;
+		}
 
-/* Showcase */
+		/* Showcase */
 
-#showcase{
-	min-height: 400px;
-	/* background:url('./doge.jpg') no-repeat 0 0; */
-	text-align: center;
-	color: #ffffff;
-}
+		#showcase{
+			min-height: 800px;
+			background:url('./doge.jpg') no-repeat 0 0; 
+			background-size: 100%;
+			text-align: center;
+			color: #ffffff;
+		}
 
-#showcase h1{
-	margin-top: 100px;
-	font-size: 55px;
-	margin-bottom: 10px; 
-}
+		#showcase h1{
+			margin-top: 100px;
+			font-size: 55px;
+			margin-bottom: 10px; 
+		}
 
-/* About */
+		/* About */
 
-#about{
-	min-height: 200px;
-	text-align: center;
-	color: #ffffff;
-}
+		#about{
+			min-height: 1000px;
+			text-align: center;
+			font-size: 30px;
+			color: black;
+			background:url('team.jpg') no-repeat;
+			background-size: 100%; 
+			max-width: 100%;
+		}
 
-/*input/output section */
+		#about h1{
+			margin-top: 100px;
+		}
 
-#IO {
-	color: #ffffff;
-	text-align: center;
-	font-size: 30px;
-}
-footer {
-	color: #ffffff;
-	text-align: center;
-	padding: 15px;
-}
+		/*input/output section */
+
+		#IO {
+			color: #ffffff;
+			text-align: left;
+			font-size: 30px;
+			float: left;
+		}
+		footer {
+			position: relative;
+			bottom: 0;
+			height: 60px;
+			color: #ffffff;
+			text-align: center;
+			padding: 15px;
+
+		}
 	</style>
 </head>
 <body>
@@ -114,7 +129,7 @@ footer {
 			</div>
 			<nav>
 				<ul>
-					<li class= "current"><a href="index.html">Home</a></li>
+					<li class= "current"><a href="index2.html">Home</a></li>
 				</ul>
 			</nav>
 		</div>
@@ -129,7 +144,8 @@ footer {
 	<section id="about">
 		<div class="container">
 			<h1>Meet the team!</h1>
-		</div>		
+		</div>
+<!-- 		<img id="team" src="team.jpg"> -->
 	</section>
 
 	<section id="IO">
@@ -149,24 +165,24 @@ footer {
 			console.log("MARK");
 			var miles = x.elements["miles"].value;
 			var xhttp = new XMLHttpRequest();
-			  xhttp.onreadystatechange = function() {
-			    if (this.readyState == 4 && this.status == 200) {
-			      document.getElementById("output").innerHTML = this.responseText;
-			    }
-			  };
-			  xhttp.open("GET", "/miles?="+miles, true);
-			  xhttp.send();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById("output").innerHTML = this.responseText;
+				}
+			};
+			xhttp.open("GET", "/miles?="+miles, true);
+			xhttp.send();
 		}
 
 		function cancelWrk() {
 			var xhttp = new XMLHttpRequest();
-			  xhttp.onreadystatechange = function() {
-			    if (this.readyState == 4 && this.status == 200) {
-			      document.getElementById("output").innerHTML = this.responseText;
-			    }
-			  };
-			  xhttp.open("GET", "/cancel", true);
-			  xhttp.send();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById("output").innerHTML = this.responseText;
+				}
+			};
+			xhttp.open("GET", "/cancel", true);
+			xhttp.send();
 		}
 
 	</script>
