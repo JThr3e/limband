@@ -73,11 +73,12 @@
 		/* Showcase */
 
 		#showcase{
-			min-height: 800px;
-			background:url('./doge.jpg') no-repeat 0 0; 
-			background-size: 100%;
+			background:url('./doge.jpg') no-repeat; 
+			background-size: 100% auto;
 			text-align: center;
+			min-height: 800px;
 			color: #ffffff;
+
 		}
 
 		#showcase h1{
@@ -89,13 +90,12 @@
 		/* About */
 
 		#about{
-			min-height: 1000px;
 			text-align: center;
 			font-size: 30px;
 			color: black;
 			background:url('team.jpg') no-repeat;
-			background-size: 100%; 
-			max-width: 100%;
+			background-size: 100% auto; 
+			min-height: 1000px;
 		}
 
 		#about h1{
@@ -106,10 +106,22 @@
 
 		#IO {
 			color: #ffffff;
-			text-align: left;
+			text-align: center;
 			font-size: 30px;
-			float: left;
 		}
+
+		#IO h1{
+			font-size: 40px;
+		}
+
+		#form1 {
+			font-size: 20px;
+		}
+
+		input[type=text] {
+			width: 45px;
+		}
+
 		footer {
 			position: relative;
 			bottom: 0;
@@ -150,9 +162,10 @@
 
 	<section id="IO">
 		<div class ="container">
-			<div id = "info">Current Workout:</div>
+			<h1>Enter Goals:</h1>
 			<form id="form1">
-				Enter Target Distance: <input name="miles" type="text" placeholder="Miles"> <br>
+				Distance: <input name="miles" type="text" placeholder="miles"> <br>
+				Pace: <input name="mins" type="text" placeholder="minutes"> <input type="text" name="seconds" placeholder="seconds">
 				<button type="button" class="button" onclick="load()">Submit</button>
 			</form>
 			<button id = "cancel" onclick="cancelWrk()">Cancel Workout</button>
@@ -164,6 +177,8 @@
 			var x = document.getElementById("form1");
 			console.log("MARK");
 			var miles = x.elements["miles"].value;
+			var mins = x.elements["mins"].value;
+			var secs = x.elements["seconds"].value;
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
@@ -171,6 +186,8 @@
 				}
 			};
 			xhttp.open("GET", "/miles?="+miles, true);
+			xhttp.open("GET", "/mins?="+mins, true);
+			xhttp.open("GET", "/secs?="+secs, true);
 			xhttp.send();
 		}
 
