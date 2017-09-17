@@ -11,6 +11,7 @@
 #include <SoftwareSerial.h>
 #include <math.h>
 #include <Wire.h>
+#include <I2C_Anything.h>
 
 //setting up software serial, can change pins to match wiring
 SoftwareSerial mySerial(3, 2);
@@ -78,10 +79,10 @@ void useInterrupt(boolean v) {
 }
 
 void requestEvent(){
-  float message[] = {instVelocity, changeInDistance};
-  Wire.beginTransmission();
-  Wire.write(message[], 8);
-  Wire.endTransmission();
+  byte v = (instVelocity/40)*255;
+  byte d = (changeInDistance/40)*255;
+  byte msg[] = {v, d};
+  Wire.write(msg, 2);
 }
 
 void setVariables(){
