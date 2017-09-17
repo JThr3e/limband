@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>LimBand | Home</title>
+	<title>limband | Home</title>
 	<style>
 		body{
 			font:15px/1.5 Helvetica, Arial, sans-serif;
@@ -126,12 +126,6 @@
 			font-size: 30px;
 		}
 
-/*		button {
-			width: 100px;
-			height: 35px;
-			font-size:30px;
-		}
-*/
 		footer {
 			position: relative;
 			bottom: 0;
@@ -159,7 +153,7 @@
 
 	<section id="showcase">
 		<div class="container">
-			<h1>Meet the LimBand!</h1>
+			<h1>Meet the limband!</h1>
 		</div> 
 	</section>
 
@@ -167,7 +161,6 @@
 		<div class="container">
 			<h1>Meet the team!</h1>
 		</div>
-<!-- 		<img id="team" src="team.jpg"> -->
 	</section>
 
 	<section id="IO">
@@ -180,9 +173,9 @@
 			</form>
 			<button id = "cancel" type="button" onclick="cancelWrk()">Cancel Workout</button>
 			<h1>Current Goals:</h1>
-			<p1>Kilometers: </p1> <p1 id = "d"></p1><br>
-			<p1>Pace: </p1> <p1 id = p></p1>
-			</div>
+			<p1>Distance: </p1> <p1 id = "d"></p1><br>
+			<p1>Pace: </p1> <p1 id = p></p1><br>
+			<button id = "start" type="button" onclick="start()">Begin Workout!</button>
 		</div>
 	</section>
 	<script>
@@ -217,6 +210,17 @@
 			document.getElementById("p").innerHTML =  mins + ":" + secs + " per km";
 		}
 
+		function start() {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById("output").innerHTML = this.responseText;
+				}
+			};
+			xhttp.open("GET", "/start", true);
+			xhttp.send();
+		}
+
 		function cancelWrk() {
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
@@ -232,7 +236,7 @@
 
 
 	<footer>
-		<p>LimBand, Copyright &copy; 2017</p>
+		<p>limband, Copyright &copy; 2017</p>
 	</footer>
 
 </body>
