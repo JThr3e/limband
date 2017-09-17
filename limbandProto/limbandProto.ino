@@ -1,21 +1,28 @@
 #include <ESP8266WiFi.h>
 #include <Adafruit_NeoPixel.h>
+#include <SoftwareSerial.h>
+#include <math.h>
+
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
 #define PIN 12
 
+
 const char WiFiAPPSK[] = "bigredbacks";
 const int LED_PIN = 4; 
 boolean turnedOn;
 int km2run;
-int timer;
+unsigned long timer = millis();
+
+int counter = 0;
 WiFiServer server(80);
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(115, PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() 
 {
-  km2run = 0;
+  Serial.begin(115200);
+  km2run = 0;  
   timer = 0;
   turnedOn = false;
   initHardware();
@@ -24,22 +31,6 @@ void setup()
   strip.begin();
   strip.show();
 }
-
-
-//every second get distance traveled from the GPS
-void loop() 
-{
-  runSimu();
-  weefeeShet();
-  delay(1);
-}
-
-
-
-
-
-
-
 
 void runSimu(){
   if(millis() - timer > 1000){
@@ -110,3 +101,13 @@ void initHardware()
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 }
+
+
+//every second get distance traveled from the GPS
+void loop() 
+{
+  runSimu();
+  weefeeShet();
+  delay(1);
+}
+

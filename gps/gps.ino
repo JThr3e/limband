@@ -12,7 +12,8 @@
 #include <math.h>
 
 //setting up software serial, can change pins to match wiring
-SoftwareSerial mySerial(3, 2);
+//SoftwareSerial mySerial(3, 2);
+HardwareSerial mySerial = Serial1;
 Adafruit_GPS GPS(&mySerial);
 #define GPSECHO false //true if GPS echos data to serial monitor
 
@@ -167,6 +168,7 @@ void loop()                     // run over and over again
     setVariables();
     counter++;
   }
+
 
   // if millis() or timer wraps around, we'll just reset it
   if (millis() - timer > 1000){

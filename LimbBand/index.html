@@ -48,23 +48,25 @@
 			var miles = x.elements["miles"].value;
 			var mins = x.elements["minutes"].value;
 			var secs = x.elements["seconds"].value;
-			document.getElementById("output").innerHTML = "You are running " + miles + " miles at " + mins + " minutes and " + secs + " seconds per mile.";
-			// var xhr = new XMLHttpRequest();
-			// xhr.open("GET", "./hey.txt", true);
-			// xhr.onload = function(){
-			// 	if (this.status == 200){
-			// 	}
-			// }
-			// xhr.send();
-
+			var xhr = new XMLHttpRequest();
+			// document.getElementById("output").innerHTML =
+			// 		"You want to run " + miles + " at a " + mins + " minute and " + secs +" second pace.";
+			xhr.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById("output").innerHTML =
+					"You want to run " + miles + " at a " + mins + " minute and " + secs +" second pace.";
+				}
+				xhr.open("GET", "mi=" + miles + "mins=" + mins + "secs=" + secs, true);
+				xhr.send();
+			}
 		}
 
 	</script>
 
 
-	<footer>
-		<p>LimBand, Copyright &copy; 2017</p>
-	</footer>
+		<footer>
+			<p>LimBand, Copyright &copy; 2017</p>
+		</footer>
 
-</body>
-</html>
+	</body>
+	</html>
