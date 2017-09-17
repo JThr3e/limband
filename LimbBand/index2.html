@@ -27,11 +27,10 @@
 
 		/* Header **/
 		header{
-			background: #35424a;
+			background: #F7F7F7;
 			color: #ffffff;
 			padding-top: 30px;
 			min-height: 70px;
-			border-bottom: pink 3px solid;
 		}
 
 		header a{
@@ -51,17 +50,20 @@
 			float:left;
 		}
 
-		header #branding h1{
-			margin:0;
+		header #logo{
+			width: 250px;
+			height: auto;
+			margin-bottom: 25px;
 		}
 
 		header nav{
 			float:right;
-			margin-top: 10px;
+			margin-top: 25px;
+			
 		}
 
 		header .highlight, header .current a{
-			color: #50EBEC;
+			color: black;
 			font-weight: bold;
 		}
 
@@ -136,8 +138,8 @@
 <body>
 	<Header>
 		<div class= "container">
-			<div id= "branding">
-				<h1>Lim<span class="highlight">Band</span></h1>
+			<div id = "branding">
+				<img id = "logo" src="./logo.png">
 			</div>
 			<nav>
 				<ul>
@@ -164,19 +166,22 @@
 		<div class ="container">
 			<h1>Enter Goals:</h1>
 			<form id="form1">
-				Distance: <input name="miles" type="text" placeholder="miles"> <br>
-				Pace: <input name="mins" type="text" placeholder="minutes"> <input type="text" name="seconds" placeholder="seconds">
+				Distance: <input name="km" type="text" placeholder="kilometers"> <br>
+				Pace: <input name="mins" type="text" placeholder="minutes">:<input type="text" name="seconds" placeholder="seconds">
 				<button type="button" class="button" onclick="load()">Submit</button>
 			</form>
 			<button id = "cancel" onclick="cancelWrk()">Cancel Workout</button>
-			<div id="output"></div>
+			<h1>Current Goals:</h1>
+			<p1>Kilometers: </p1> <p1 id = "d"></p1><br>
+			<p1>Pace: </p1> <p1 id = p></p1>
+			</div>
 		</div>
 	</section>
 	<script>
 		function load() {
 			var x = document.getElementById("form1");
 			console.log("MARK");
-			var miles = x.elements["miles"].value;
+			var km = x.elements["km"].value;
 			var mins = x.elements["mins"].value;
 			var secs = x.elements["seconds"].value;
 			var xhttp = new XMLHttpRequest();
@@ -185,10 +190,12 @@
 					document.getElementById("output").innerHTML = this.responseText;
 				}
 			};
-			xhttp.open("GET", "/miles?="+miles, true);
+			xhttp.open("GET", "/km?="+km, true);
 			xhttp.open("GET", "/mins?="+mins, true);
 			xhttp.open("GET", "/secs?="+secs, true);
 			xhttp.send();
+			document.getElementById("d").innerHTML = km + " Kilometers";
+			document.getElementById("p").innerHTML =  mins + ":" + secs + " per km";
 		}
 
 		function cancelWrk() {
