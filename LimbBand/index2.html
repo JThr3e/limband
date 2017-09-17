@@ -117,13 +117,21 @@
 		}
 
 		#form1 {
-			font-size: 20px;
+			font-size: 30px;
 		}
 
 		input[type=text] {
-			width: 45px;
+			width: 50px;
+			height: 30px;
+			font-size: 30px;
 		}
 
+/*		button {
+			width: 100px;
+			height: 35px;
+			font-size:30px;
+		}
+*/
 		footer {
 			position: relative;
 			bottom: 0;
@@ -166,11 +174,11 @@
 		<div class ="container">
 			<h1>Enter Goals:</h1>
 			<form id="form1">
-				Distance: <input name="km" type="text" placeholder="kilometers"> <br>
-				Pace: <input name="mins" type="text" placeholder="minutes">:<input type="text" name="seconds" placeholder="seconds">
+				Distance: <input name="km" type="text" placeholder="km"> <br>
+				Pace: <input name="mins" type="text" placeholder="min">:<input type="text" name="seconds" placeholder="sec">
 				<button type="button" class="button" onclick="load()">Submit</button>
 			</form>
-			<button id = "cancel" onclick="cancelWrk()">Cancel Workout</button>
+			<button id = "cancel" type="button" onclick="cancelWrk()">Cancel Workout</button>
 			<h1>Current Goals:</h1>
 			<p1>Kilometers: </p1> <p1 id = "d"></p1><br>
 			<p1>Pace: </p1> <p1 id = p></p1>
@@ -184,6 +192,17 @@
 			var km = x.elements["km"].value;
 			var mins = x.elements["mins"].value;
 			var secs = x.elements["seconds"].value;
+			if (isNaN(km) || isNaN(mins) || isNaN(secs) || !km || !mins) {
+				alert("Please enter valid numbers.");
+				throw new Error("Invalid input.");
+			} else if(secs > 59) {
+				alert("Please enter a valid second value.")
+				throw new Error("Invalid second value.")
+			} else if (secs.toString().length == 1) {
+				secs = 0 + secs;
+			} else if (secs == 0 || !secs) {
+				secs = "00";
+			}
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
