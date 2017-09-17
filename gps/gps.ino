@@ -24,6 +24,7 @@ void useInterrupt(boolean); // Func prototype keeps Arduino 0023 happy
 //global variables
 unsigned long timer = millis();
 float totalDistance = 0;
+float instVelocity = 0;
 uint8_t h, m, s, y, mo, d;
 uint16_t ms;
 int32_t latitude_fixed, longitude_fixed;
@@ -103,10 +104,15 @@ void setVariables(){
   lonDir = GPS.lon;
   lat = GPS.latitude;
   lon = GPS.longitude;
+  instVelocity = convertKnots(GPS.speed);
 }
 
 float toRad(float degree){
   return (degree * 71) / 4068;
+}
+
+float convertKnots(float knots){
+  return knots*1.15077945; //to mph
 }
 
 void calculateDistance(){
@@ -153,7 +159,7 @@ void loop()                     // run over and over again
     // so be very wary if using OUTPUT_ALLDATA and trying to print out data
     //Serial.println(GPS.lastNMEA());   // this also sets the newNMEAreceived() flag to false
   
-  if(!GPS.parse(GPS.lastNMEA()))   // this also sets the newNMEAreceived() flag to false
+  if(!GPS.parse(GPS.lastNMEA()))   // this also sets the newNMEAreceived() flag to falsex
      return;  // we can fail to parse a sentence in which case we should just wait for another
   }
 
