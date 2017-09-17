@@ -27,18 +27,10 @@
 
 		/* Header **/
 		header{
-<<<<<<< HEAD
-			background: #35424a;
-			color: #ffffff;
-			padding-top: 30px;
-			min-height: 70px;
-			border-bottom: pink 3px solid;
-=======
 			background: #F7F7F7;
 			color: #ffffff;
 			padding-top: 30px;
 			min-height: 70px;
->>>>>>> f46775fae2808010b49534ce96085255a512b4be
 		}
 
 		header a{
@@ -58,33 +50,20 @@
 			float:left;
 		}
 
-<<<<<<< HEAD
-		header #branding h1{
-			margin:0;
-=======
 		header #logo{
 			width: 250px;
 			height: auto;
 			margin-bottom: 25px;
->>>>>>> f46775fae2808010b49534ce96085255a512b4be
 		}
 
 		header nav{
 			float:right;
-<<<<<<< HEAD
-			margin-top: 10px;
-		}
-
-		header .highlight, header .current a{
-			color: #50EBEC;
-=======
 			margin-top: 25px;
 			
 		}
 
 		header .highlight, header .current a{
 			color: black;
->>>>>>> f46775fae2808010b49534ce96085255a512b4be
 			font-weight: bold;
 		}
 
@@ -167,13 +146,8 @@
 <body>
 	<Header>
 		<div class= "container">
-<<<<<<< HEAD
-			<div id= "branding">
-				<h1>Lim<span class="highlight">Band</span></h1>
-=======
 			<div id = "branding">
 				<img id = "logo" src="./logo.png">
->>>>>>> f46775fae2808010b49534ce96085255a512b4be
 			</div>
 			<nav>
 				<ul>
@@ -200,21 +174,8 @@
 		<div class ="container">
 			<h1>Enter Goals:</h1>
 			<form id="form1">
-<<<<<<< HEAD
 				Distance: <input name="km" type="text" placeholder="km"> <br>
 				Pace: <input name="mins" type="text" placeholder="min">:<input type="text" name="seconds" placeholder="sec">
-=======
-<<<<<<< HEAD
-				Distance: <input name="miles" type="text" placeholder="miles"> <br>
-				Pace: <input name="mins" type="text" placeholder="minutes"> <input type="text" name="seconds" placeholder="seconds">
-				<button type="button" class="button" onclick="load()">Submit</button>
-			</form>
-			<button id = "cancel" onclick="cancelWrk()">Cancel Workout</button>
-			<div id="output"></div>
-=======
-				Distance: <input name="km" type="text" placeholder="kilometers"> <br>
-				Pace: <input name="mins" type="text" placeholder="minutes">:<input type="text" name="seconds" placeholder="seconds">
->>>>>>> 895431d519f6dba9f00aaf705ea6f4e119338189
 				<button type="button" class="button" onclick="load()">Submit</button>
 			</form>
 			<button id = "cancel" type="button" onclick="cancelWrk()">Cancel Workout</button>
@@ -222,18 +183,13 @@
 			<p1>Kilometers: </p1> <p1 id = "d"></p1><br>
 			<p1>Pace: </p1> <p1 id = p></p1>
 			</div>
->>>>>>> f46775fae2808010b49534ce96085255a512b4be
 		</div>
 	</section>
 	<script>
 		function load() {
 			var x = document.getElementById("form1");
 			console.log("MARK");
-<<<<<<< HEAD
-			var miles = x.elements["miles"].value;
-=======
 			var km = x.elements["km"].value;
->>>>>>> f46775fae2808010b49534ce96085255a512b4be
 			var mins = x.elements["mins"].value;
 			var secs = x.elements["seconds"].value;
 			if (isNaN(km) || isNaN(mins) || isNaN(secs) || !km || !mins) {
@@ -253,19 +209,12 @@
 					document.getElementById("output").innerHTML = this.responseText;
 				}
 			};
-<<<<<<< HEAD
-			xhttp.open("GET", "/miles?="+miles, true);
-			xhttp.open("GET", "/mins?="+mins, true);
-			xhttp.open("GET", "/secs?="+secs, true);
-			xhttp.send();
-=======
 			xhttp.open("GET", "/km?="+km, true);
 			xhttp.open("GET", "/mins?="+mins, true);
 			xhttp.open("GET", "/secs?="+secs, true);
 			xhttp.send();
 			document.getElementById("d").innerHTML = km + " Kilometers";
 			document.getElementById("p").innerHTML =  mins + ":" + secs + " per km";
->>>>>>> f46775fae2808010b49534ce96085255a512b4be
 		}
 
 		function cancelWrk() {
