@@ -10,10 +10,10 @@
 #include <Adafruit_GPS.h>
 #include <SoftwareSerial.h>
 #include <math.h>
+#include <Wire.h>
 
 //setting up software serial, can change pins to match wiring
-//SoftwareSerial mySerial(3, 2);
-HardwareSerial mySerial = Serial1;
+SoftwareSerial mySerial(3, 2);
 Adafruit_GPS GPS(&mySerial);
 #define GPSECHO false //true if GPS echos data to serial monitor
 
@@ -25,6 +25,7 @@ void useInterrupt(boolean); // Func prototype keeps Arduino 0023 happy
 //global variables
 unsigned long timer = millis();
 float totalDistance = 0;
+float changeInDistance = 0;
 float instVelocity = 0;
 uint8_t h, m, s, y, mo, d;
 uint16_t ms;
@@ -39,27 +40,12 @@ int counter = 0;
 void setup() {
   Serial.begin(115200); //connect to read GPS fast enough
   GPS.begin(9600); //default baud rate for GPS
-  //GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA); //RMC and GGA data sent to serial monitor
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY); //RMC data only
-
-  // send both commands below to change both the output rate (how often the position
-  // is written to the serial line), and the position fix rate.
-  
-  // set 10 Hz update rate - for 9600 baud you'll have to set the output to RMC only (see above)
-  // Note the position can only be updated at most 5 times a second so it will lag behind serial output.
   GPS.sendCommand(PMTK_SET_NMEA_UPDATE_10HZ);
   GPS.sendCommand(PMTK_API_SET_FIX_CTL_5HZ);
-  
-  // set 5hz update rate
-  //GPS.sendCommand(PMTK_SET_NMEA_UPDATE_5HZ);
-  //GPS.sendCommand(PMTK_API_SET_FIX_CTL_5HZ);
 
-  // request updates on antenna status, comment out to keep quiet
-  // GPS.sendCommand(PGCMD_ANTENNA);
-
-  // the nice thing about this code is you can have a timer0 interrupt go off
-  // every 1 millisecond, and read data from the GPS for you. that makes the
-  // loop code a heck of a lot easier!
+  Wire.begin(8);                // join i2c bus with address #8
+  Wire.onRequest(requestEvent); // register event
   
   useInterrupt(true);
   delay(1000);
@@ -91,6 +77,13 @@ void useInterrupt(boolean v) {
   }
 }
 
+void requestEvent(){
+  float message[] = {instVelocity, changeInDistance};
+  Wire.beginTransmission();
+  Wire.write(message[], 8);
+  Wire.endTransmission();
+}
+
 void setVariables(){
   h = GPS.hour;
   m = GPS.minute;
@@ -113,7 +106,7 @@ float toRad(float degree){
 }
 
 float convertKnots(float knots){
-  return knots*1.15077945; //to mph
+  return knots*1.852; //to kmph
 }
 
 void calculateDistance(){
@@ -121,7 +114,7 @@ void calculateDistance(){
   float lat2rad = toRad(GPS.latitudeDegrees);
   float deltaLat = toRad(degLat-GPS.latitudeDegrees);
   float deltaLong = toRad(degLong-GPS.longitudeDegrees);
-  const float r = 6731e3; //radius of earth in meters
+  const float r = 6371; //radius of earth in kilometers
 
   Serial.print("previous latitude: "); Serial.print(lat); Serial.print(latDir); Serial.print(", "); 
   Serial.print(lon); Serial.println(lonDir); 
@@ -133,26 +126,15 @@ void calculateDistance(){
 
   Serial.print(a, 9); Serial.print("         "); Serial.println(c, 9);
 
-  float distance = r * c;
+  changeInDistance = r * c;
   
   //float distance = acos(sin(lat1rad)*sin(lat2rad) + cos(lat1rad)*cos(lat2rad)*cos(deltaL)) * r;
-  totalDistance += distance;
+  totalDistance += changeInDistance;
   Serial.print("the total distance is: "); Serial.println(totalDistance, 9);
 }
 
 void loop()                     // run over and over again
 {
-  
-  // in case you are not using the interrupt above, you'll
-  // need to 'hand query' the GPS, not suggested :(
-  /*if (! usingInterrupt) {
-    // read data from the GPS in the 'main loop'
-    char c = GPS.read();
-    // if you want to debug, this is a good time to do it!
-    if (GPSECHO)
-      if (c) Serial.print(c);
-  }*/
-  
   // if a sentence is received, we can check the checksum, parse it...
   if(GPS.newNMEAreceived()) {
     // a tricky thing here is if we print the NMEA sentence, or data
@@ -168,7 +150,6 @@ void loop()                     // run over and over again
     setVariables();
     counter++;
   }
-
 
   // if millis() or timer wraps around, we'll just reset it
   if (millis() - timer > 1000){
