@@ -1,6 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <Adafruit_NeoPixel.h>
 #include <SoftwareSerial.h>
+#include <Wire.h>
 #include <math.h>
 
 #ifdef __AVR__
@@ -8,12 +9,15 @@
 #endif
 #define PIN 12
 
-
 const char WiFiAPPSK[] = "bigredbacks";
-const int LED_PIN = 4; 
+const int LED_PIN = 6; 
 boolean turnedOn;
-int km2run;
+float km2run; //distance to go
+float dis; //speed
+float lastDis;
+float lastSped;
 unsigned long timer = millis();
+float totalDis;
 
 int counter = 0;
 WiFiServer server(80);
@@ -21,24 +25,174 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(115, PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() 
 {
+  Wire.begin();        // join i2c bus (address optional for master)
   Serial.begin(115200);
-  km2run = 0;  
+  km2run = 0.0;  
+  lastDis = 0;
+  lastSped = 0;
   timer = 0;
-  turnedOn = false;
+  turnedOn = false; 
+  totalDis = 0;
+
   initHardware();
   setupWiFi();
   server.begin();
   strip.begin();
-  strip.show();
+  strip.show(); //initialize all pixels to 'off'
+  pinMode(LED_PIN, OUTPUT);
 }
 
-void runSimu(){
-  if(millis() - timer > 1000){
-    timer = millis();
-    if(km2run > 0){
-      km2run -= random(1,10);
-      Serial.println(km2run);
+void pulse(){
+  for(int i = 255; i > 0; i--){
+    strip.setPixelColor(i, strip.Color(127, 0, 255));
+    strip.setBrightness(i);
+    strip.show();
+    delay(10);
+  }
+  for(int i = 0; i < 255; i++){
+    strip.setPixelColor(i, strip.Color(127, 0, 255));
+    strip.setBrightness(i);
+    strip.show();
+    delay(10);
+  }
+}
+
+void parade() {
+  //while(waiting on user or gps init)
+  for(int i = 0; i < strip.numPixels(); i++) {
+    if (i % 2 == 0)
+    strip.setPixelColor(i, strip.Color(0, 255, 0));
+    else
+    strip.setPixelColor(i, 0);
+    strip.show();
+    delay(50);
+  }
+    for(int i = 0; i < strip.numPixels(); i++) {
+    if (i % 2 == 0)
+    strip.setPixelColor(i, 0);
+    else
+    strip.setPixelColor(i*2, strip.Color(0, 255, 0));
+    strip.show();
+    delay(50);
     }
+}
+
+void flash(){
+  int countdown = 3;
+  while (countdown > 0){
+    if (countdown == 1){
+       ready(strip.Color(0, 255, 0));
+    }
+    else {
+      ready(strip.Color(255, 0, 0));
+    }
+    strip.show();
+    off();
+    countdown--;
+  }
+}
+
+void ready(uint32_t c){
+  strip.clear();
+  strip.show();
+  for(int i = 0; i < strip.numPixels(); i++){
+    strip.setPixelColor(i, c);
+    strip.show();
+  }
+   delay(750);
+ }
+
+void off(){
+  strip.clear();
+  strip.show();
+  delay(500);
+}
+
+void progress(){ //come back to this when you know what total distance var is
+  strip.clear();
+  strip.show();
+  int count = strip.numPixels() * ((totalDis - km2run)/totalDis);
+  float loading = (float) strip.numPixels() * ((totalDis - km2run)/totalDis);
+  if(dis <= lastSped/
+  int r = ;
+  int g = ;
+  int b = ;
+  c = strip.Color(r, g, b);
+  loadC = strip.Color();
+  
+  for(int i = 0; i < count; i++){
+    strip.setPixelColor(i, c);    //255, 255, 0
+    strip.show();
+    delay(20);
+  }
+
+  while(loading <= count + 1){
+    strip.setPixelColor(count, loadC);
+    strip.show();
+    delay(500);
+    strip.setPixelColor(count, 0);
+    strip.show();
+    delay(500);
+  }
+}
+
+void whatPattern(){
+  char id;
+
+  
+  switch(id){
+    case '0': 
+      Serial.println("pattern: ready");
+      ready(strip.Color(0, 255, 0));
+      break;
+    case '1':
+      Serial.println("pattern: progress");
+      progress();
+      break;
+   case '2':
+      Serial.println("pattern: flash");
+      flash();
+      break;
+   case '3':
+      Serial.println("pattern: off");
+      off();
+      break;
+  case '4':
+      Serial.println("pattern: parade");
+      parade();
+      break;
+  default: 
+      Serial.println("pattern: pulse");
+      pulse();
+      break;
+  }
+}
+
+void reqData(){
+  if(millis() - timer > 1000){
+    //Serial.println("HELP ME OH NO");
+    timer = millis();
+      Wire.requestFrom(8, 1);
+      String data = "";
+      while (Wire.available()) { 
+        dis = Wire.read();
+        dis = (dis/255.0)*40.0;
+        if(km2run > 0){
+          km2run -= dis;
+        }
+        Serial.print("speed (m/s): ");
+        Serial.println(dis);
+        Serial.print("Distance Left (m): ");
+        Serial.println(km2run);
+      }
+//      int coma = data.indexOf(",");
+//      String sped = data.substring(0, coma);
+//      String dis = data.substring(coma+1);
+//      lastDis = dis.toFloat();
+//      lastSped = sped.toFloat();
+//      if(km2run > 0){
+//        km2run -= lastDis;
+//      }
   }
 }
 
@@ -57,8 +211,8 @@ void weefeeShet(){
     String dis = req.substring(strIndex, stpIndex);
     Serial.println(dis.toInt());
     if(dis.toInt() != 0 && km2run <= 0){
-      km2run = dis.toInt();
-      client.print("You will run for "+dis+" miles!");
+      km2run = dis.toInt()*1000;
+      client.print("You will run for "+dis+" kilometers!");
       Serial.println("foo");
       client.flush();
     }
@@ -106,7 +260,8 @@ void initHardware()
 //every second get distance traveled from the GPS
 void loop() 
 {
-  runSimu();
+  whatPattern();
+  reqData();
   weefeeShet();
   delay(1);
 }

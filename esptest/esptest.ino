@@ -6,7 +6,7 @@
 #define PIN 12
 
 const char WiFiAPPSK[] = "bigredbacks";
-const int LED_PIN = 4; 
+const int LED_PIN = 6; 
 boolean turnedOn;
 int km2run;
 int timer;

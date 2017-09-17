@@ -11,7 +11,11 @@
 #include <SoftwareSerial.h>
 #include <math.h>
 #include <Wire.h>
+<<<<<<< HEAD
 #include <I2C_Anything.h>
+=======
+//#include <I2C_Anything.h>
+>>>>>>> 801dc4277f50e2d8eb6a052094ff74a88002ea37
 
 //setting up software serial, can change pins to match wiring
 SoftwareSerial mySerial(3, 2);
@@ -26,7 +30,7 @@ void useInterrupt(boolean); // Func prototype keeps Arduino 0023 happy
 //global variables
 unsigned long timer = millis();
 float totalDistance = 0;
-float changeInDistance = 0;
+float changeInDistance;
 float instVelocity = 0;
 uint8_t h, m, s, y, mo, d;
 uint16_t ms;
@@ -44,7 +48,7 @@ void setup() {
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY); //RMC data only
   GPS.sendCommand(PMTK_SET_NMEA_UPDATE_10HZ);
   GPS.sendCommand(PMTK_API_SET_FIX_CTL_5HZ);
-
+  changeInDistance = 0;
   Wire.begin(8);                // join i2c bus with address #8
   Wire.onRequest(requestEvent); // register event
   
@@ -79,10 +83,16 @@ void useInterrupt(boolean v) {
 }
 
 void requestEvent(){
+<<<<<<< HEAD
   byte v = (instVelocity/40)*255;
   byte d = (changeInDistance/40)*255;
   byte msg[] = {v, d};
   Wire.write(msg, 2);
+=======
+  byte d = (byte)(((changeInDistance*1000)/40.0)*255);
+ // byte msg[] = {d};
+  Wire.write(&d, 1);
+>>>>>>> 801dc4277f50e2d8eb6a052094ff74a88002ea37
 }
 
 void setVariables(){
@@ -125,9 +135,9 @@ void calculateDistance(){
   float a = sin(deltaLat/2) * sin(deltaLat/2) + cos(lat1rad) * cos(lat2rad) * sin(deltaLong/2) * sin(deltaLong/2);
   float c = 2 * atan2(sqrt(a), sqrt(1-a));
 
-  Serial.print(a, 9); Serial.print("         "); Serial.println(c, 9);
+  Serial.println(changeInDistance*1000);
 
-  changeInDistance = r * c;
+  changeInDistance = (r * c);
   
   //float distance = acos(sin(lat1rad)*sin(lat2rad) + cos(lat1rad)*cos(lat2rad)*cos(deltaL)) * r;
   totalDistance += changeInDistance;
