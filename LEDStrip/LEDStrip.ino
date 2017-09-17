@@ -3,7 +3,7 @@
 #include <avr/power.h>
 #endif
 
-#define PIN 12
+#define PIN 13
 #define STRIPLENGTH 44
 
 // Parameter 1 = number of pixels in strip
