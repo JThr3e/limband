@@ -12,7 +12,8 @@
 #include <math.h>
 
 //setting up software serial, can change pins to match wiring
-SoftwareSerial mySerial(3, 2);
+//SoftwareSerial mySerial(3, 2);
+HardwareSerial mySerial = Serial1;
 Adafruit_GPS GPS(&mySerial);
 #define GPSECHO false //true if GPS echos data to serial monitor
 
@@ -24,6 +25,7 @@ void useInterrupt(boolean); // Func prototype keeps Arduino 0023 happy
 //global variables
 unsigned long timer = millis();
 float totalDistance = 0;
+float instVelocity = 0;
 uint8_t h, m, s, y, mo, d;
 uint16_t ms;
 int32_t latitude_fixed, longitude_fixed;
@@ -103,10 +105,15 @@ void setVariables(){
   lonDir = GPS.lon;
   lat = GPS.latitude;
   lon = GPS.longitude;
+  instVelocity = convertKnots(GPS.speed);
 }
 
 float toRad(float degree){
   return (degree * 71) / 4068;
+}
+
+float convertKnots(float knots){
+  return knots*1.15077945; //to mph
 }
 
 void calculateDistance(){
@@ -161,6 +168,7 @@ void loop()                     // run over and over again
     setVariables();
     counter++;
   }
+
 
   // if millis() or timer wraps around, we'll just reset it
   if (millis() - timer > 1000){
